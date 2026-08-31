@@ -16,17 +16,18 @@ import {
   motion, useReducedMotion, useScroll, useTransform,
 } from "framer-motion";
 import {
-  ArrowRight, CalendarPlus, ChevronRight, Clock, HeartPulse, Quote,
-  ShieldCheck, Sparkles, Stethoscope, Syringe,
+  ArrowRight, CalendarPlus, ChevronRight, HeartPulse, Quote,
+  ShieldCheck, Stethoscope,
 } from "lucide-react";
 
 import { BRAND } from "@/lib/brand";
-import { DEPARTMENTS, DOCTORS, JOURNEY, STATS, TESTIMONIALS } from "@/data/hospital";
+import { DOCTORS, JOURNEY, STATS, TESTIMONIALS } from "@/data/hospital";
 import { soft, springy, stagger, wordUp } from "@/lib/motion";
 import {
   Avatar, ButtonLink, Pill, Reveal, RevealGroup, RevealItem, SectionHead, cx,
 } from "@/components/ui";
-import { CountUp, ECGLine, FloatingField, PulseRing } from "@/components/vitals";
+import { CountUp, ECGLine, PulseRing } from "@/components/vitals";
+import { DepartmentExplorer } from "@/components/DepartmentExplorer";
 
 /* ── Hero ────────────────────────────────────────────────── */
 
@@ -140,12 +141,16 @@ function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* The heartbeat along the bottom edge, tying hero to page. */}
+      {/* The heartbeat sits just below the header rather than on the hero's
+          bottom edge. Down there it was half-covered by the quick-access cards
+          that overlap the hero, so the thing most worth seeing was the thing
+          least visible. Up here it runs across open video with nothing in
+          front of it. Fewer cycles so each beat is wider and legible. */}
       <ECGLine
-        className="absolute inset-x-0 bottom-0 z-10 h-16 w-full text-mint/70"
-        height={70}
-        cycles={14}
-        duration={5.5}
+        className="pointer-events-none absolute inset-x-0 top-[68px] z-10 h-20 w-full text-mint/85"
+        height={80}
+        cycles={9}
+        duration={5}
       />
     </section>
   );
@@ -186,63 +191,6 @@ function QuickAccess() {
                     size={16}
                     className="ml-auto mt-3 shrink-0 text-ink-faint transition-transform duration-300 group-hover:translate-x-1 group-hover:text-brand"
                   />
-                </motion.a>
-              </Link>
-            </RevealItem>
-          ))}
-        </RevealGroup>
-      </div>
-    </section>
-  );
-}
-
-/* ── Departments ─────────────────────────────────────────── */
-
-function Departments() {
-  return (
-    <section className="u-aurora relative py-28">
-      <FloatingField
-        items={[
-          { Icon: HeartPulse, x: "6%", y: "18%", size: 26 },
-          { Icon: Syringe, x: "90%", y: "26%", size: 22, delay: 1.2 },
-          { Icon: Stethoscope, x: "12%", y: "78%", size: 24, delay: 2.4 },
-          { Icon: Sparkles, x: "86%", y: "72%", size: 20, delay: 0.6 },
-        ]}
-      />
-      <div className="u-wrap relative z-10">
-        <SectionHead
-          eyebrow="Departments"
-          title="Twelve specialties, one building"
-          lead="No shuttling between sites for a scan and then a consultation. Imaging, laboratory and theatres are all on the same campus as the clinics."
-        />
-
-        <RevealGroup className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3" each={0.045}>
-          {DEPARTMENTS.map(({ id, name, nameAr, blurb, icon: Icon, alwaysOpen }) => (
-            <RevealItem key={id}>
-              <Link href={`/book?department=${id}`} asChild>
-                <motion.a
-                  className="group relative flex h-full flex-col rounded-3xl border border-line bg-white p-6
-                             transition-colors duration-300 hover:border-brand/35"
-                  whileHover={{ y: -5 }}
-                  transition={springy}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-wash text-brand
-                                     transition-all duration-300 group-hover:bg-brand group-hover:text-white
-                                     group-hover:rotate-[-6deg]">
-                      <Icon size={21} />
-                    </span>
-                    {alwaysOpen && <Pill tone="mint"><Clock size={11} /> 24h</Pill>}
-                  </div>
-
-                  <h3 className="mt-5 font-display text-[20px] text-ink">{name}</h3>
-                  <p className="mt-0.5 text-[13px] text-ink-faint" dir="rtl">{nameAr}</p>
-                  <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">{blurb}</p>
-
-                  <span className="mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-brand">
-                    Book here
-                    <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
-                  </span>
                 </motion.a>
               </Link>
             </RevealItem>
@@ -472,7 +420,7 @@ export default function Home() {
     <>
       <Hero />
       <QuickAccess />
-      <Departments />
+      <DepartmentExplorer />
       <Numbers />
       <Journey />
       <DoctorsPreview />

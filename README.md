@@ -107,6 +107,33 @@ consultant list is ten people; the copy says so rather than claiming the full 42
 - **The contact form is not a medical channel**, and says so. A form that quietly accepts "my chest
   hurts" is a safety problem, so it routes clinical questions to the phone.
 
+## Deploying to GitHub Pages
+
+`.github/workflows/deploy.yml` builds the site and publishes `dist/`. **Set
+Settings → Pages → Source to "GitHub Actions".** With "Deploy from a branch",
+GitHub serves the repository as-is, so the browser receives an `index.html`
+pointing at `/src/main.tsx`, cannot execute TypeScript, and renders a blank
+white page — that is what a white screen here means.
+
+Two things the workflow handles that a plain `npm run build` does not:
+
+- **`VITE_BASE=/<repo>/`.** Project sites live on a sub-path
+  (`band-agents.github.io/almadina-site/`), so asset URLs need that prefix or
+  every request 404s at the domain root. `src/App.tsx` feeds the same value to
+  wouter through `import.meta.env.BASE_URL`; without it every link resolves
+  above the sub-path.
+- **`dist/404.html`**, a copy of `index.html`. Pages is a static host, so a
+  deep link like `/doctors` has no file behind it. Pages serves `404.html` on
+  a miss, which hands control to the client-side router.
+
+To reproduce a Pages deploy locally:
+
+```bash
+VITE_BASE=/almadina-site/ npm run build
+cp dist/index.html dist/404.html
+# then serve dist/ from a folder named almadina-site/
+```
+
 ## Configuration
 
 `VITE_HIS_URL` points at the hospital information system (default `http://localhost:5173`).

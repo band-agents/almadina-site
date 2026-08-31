@@ -10,7 +10,7 @@
  */
 
 import { lazy, Suspense, useEffect } from "react";
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Router, Switch, useLocation } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import { Nav } from "@/components/Nav";
@@ -26,6 +26,16 @@ const Staff = lazy(() => import("@/pages/Staff"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const Book = lazy(() => import("@/pages/Book"));
 const Login = lazy(() => import("@/pages/Login"));
+
+/**
+ * Where the app is mounted.
+ *
+ * Vite injects BASE_URL from the build's `base` — "/" locally, and
+ * "/almadina-site/" on GitHub Pages, which publishes project sites under a
+ * sub-path. wouter wants it without the trailing slash. Without this every
+ * <Link href="/about"> would resolve against the domain root and 404.
+ */
+const ROUTER_BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 /** Every navigation starts at the top. Without this, moving from the bottom
     of the homepage to /contact lands you mid-page. */
@@ -69,8 +79,9 @@ export default function App() {
   const reduced = useReducedMotion();
 
   return (
-    <div className="flex min-h-svh flex-col">
-      <ScrollToTop />
+    <Router base={ROUTER_BASE}>
+      <div className="flex min-h-svh flex-col">
+        <ScrollToTop />
       <Nav />
 
       <div className="flex-1">
@@ -101,7 +112,8 @@ export default function App() {
       </div>
 
       {/* The sign-in page is a focused task; a full footer under it is noise. */}
-      {location !== "/login" && <Footer />}
-    </div>
+        {location !== "/login" && <Footer />}
+      </div>
+    </Router>
   );
 }
