@@ -1,0 +1,36 @@
+{
+  "name": "almadina-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Al-Madinah Hospital — public website. Separate from the HIS; links into it for sign-in.",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc -b --noEmit",
+    "video:studio": "remotion studio src/remotion/index.ts",
+    "video:render": "remotion render src/remotion/index.ts HeroLoop public/media/hero.mp4 --codec=h264 --log=info",
+    "video:render:webm": "remotion render src/remotion/index.ts HeroLoop public/media/hero.webm --codec=vp8 --log=info",
+    "video:poster": "remotion still src/remotion/index.ts HeroLoop public/media/hero-poster.jpg --frame=90"
+  },
+  "dependencies": {
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.469.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "wouter": "^3.3.5"
+  },
+  "devDependencies": {
+    "@remotion/cli": "^4.0.360",
+    "@remotion/player": "^4.0.360",
+    "@tailwindcss/vite": "^4.1.14",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "remotion": "^4.0.360",
+    "tailwindcss": "^4.1.14",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.2"
+  }
+}
