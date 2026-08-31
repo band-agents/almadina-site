@@ -33,6 +33,16 @@ import { DepartmentExplorer } from "@/components/DepartmentExplorer";
 
 const HEADLINE = ["Care,", "close", "to", "home."];
 
+/**
+ * Resolve a file in public/ against the deployment base.
+ *
+ * A literal "/media/hero.mp4" points at the domain root, which is wrong
+ * anywhere the site is not served from "/" — on GitHub Pages it resolved to
+ * band-agents.github.io/media/hero.mp4 and 404'd, so the hero quietly showed
+ * its gradient fallback instead of the video.
+ */
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`.replace(/\/{2,}/g, "/");
+
 function Hero() {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
@@ -68,11 +78,11 @@ function Hero() {
           muted
           loop
           playsInline
-          poster="/media/hero-poster.jpg"
+          poster={asset("media/hero-poster.jpg")}
           onCanPlay={() => setVideoReady(true)}
           aria-hidden
         >
-          <source src="/media/hero.mp4" type="video/mp4" />
+          <source src={asset("media/hero.mp4")} type="video/mp4" />
         </video>
       </motion.div>
 
